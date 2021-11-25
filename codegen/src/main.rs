@@ -44,7 +44,7 @@ impl RustGenerator {
             });
 
             for node in self.adj_list[i].iter() {
-                declarations.push_str(&format!("t{}.join();\n", node));
+                declarations.push_str(&format!("t{}.join().unwrap();\n", node));
             }
 
             declarations.push_str("}\n");
@@ -60,21 +60,21 @@ impl RustGenerator {
         let mut declarations = String::new();
         let mut add_declaration = |i: usize| {
             declarations.push_str(&format!("fn f{}(v: Arc<RwLock<Vec<u32>>>) {{\n", i));
-						declarations.push_str("let mut v = v.write().unwrap();\n");
-						declarations.push_str(&format!("v[{}] = {};\n", i, i + 1));
+						declarations.push_str("let mut vec = v.write().unwrap();\n");
+						declarations.push_str(&format!("vec[{}] = {};\n", i, i + 1));
             self.adj_list[i].iter().for_each(|node| {
                 declarations.push_str(&formatdoc! {"
 									let t{node} = {{
-										let vec = v.clone();
+										let v = v.clone();
 										thread::spawn(move || {{
-											f{node}(vec);
+											f{node}(v);
 										}})
 									}};
 								", node = node})
             });
 
             for node in self.adj_list[i].iter() {
-                declarations.push_str(&format!("t{}.join();\n", node));
+                declarations.push_str(&format!("t{}.join().unwrap();\n", node));
             }
 
             declarations.push_str("}\n");
@@ -135,7 +135,7 @@ impl RustGenerator {
             format!("../generated/programs/calls-mut-{}.rs", self.num_declarations),
             rust_code,
         )
-        .expect("Failed to write calls.rs");
+        .expect("Failed to write calls-mut.rs");
     }
 }
 
