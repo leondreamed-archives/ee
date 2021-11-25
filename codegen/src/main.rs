@@ -70,13 +70,13 @@ impl RustGenerator {
 									}};
 								", node = node})
             });
-						declarations.push_str("let mut vec = v.write().unwrap();\n");
-						declarations.push_str(&format!("vec[{}] = {};\n", i, i + 1));
 
             for node in self.adj_list[i].iter() {
                 declarations.push_str(&format!("t{}.join().unwrap();\n", node));
             }
 
+						declarations.push_str("let mut vec = v.write().unwrap();\n");
+						declarations.push_str(&format!("vec[{}] = {};\n", i, i + 1));
             declarations.push_str("}\n");
         };
 
