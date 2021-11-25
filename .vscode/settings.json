@@ -1,0 +1,6 @@
+{
+	"rust-analyzer.linkedProjects": [
+		"call-tree/generator/Cargo.toml",
+		"codegen/Cargo.toml"
+	],
+}

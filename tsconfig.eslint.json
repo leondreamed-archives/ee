@@ -1,0 +1,11 @@
+{
+	"extends": "./tsconfig.json",
+	"include": [
+		"call-tree/visualizer/*.ts",
+		"call-tree/visualizer/*.js",
+		"src",
+		".eslintrc.js",
+		"**/*.ts",
+		"**/*.js",
+	]
+}
