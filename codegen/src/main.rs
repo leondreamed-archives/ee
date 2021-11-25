@@ -3,55 +3,55 @@ use std::fs;
 
 struct RustGenerator {
     num_declarations: usize,
-    mutable: bool,
     adj_list: Vec<Vec<u32>>,
 }
 
 impl RustGenerator {
-    pub fn new(file_path: &str, mutable: bool) -> Self {
+    pub fn new(file_path: &str) -> Self {
         let adj_list: Vec<Vec<u32>> =
             serde_json::from_str(&fs::read_to_string(file_path).expect("Failed to read file"))
                 .expect("Failed to parse json");
         Self {
             num_declarations: adj_list.len(),
             adj_list,
-            mutable,
         }
     }
 
-    fn get_ref(&self, term: &str, mutable: bool) -> String {
-        if mutable {
-            "&mut ".to_string() + term
-        } else {
-            "&".to_owned() + term
+    /*
+    fn f1(v: Arc<Vec<u32>>) {
+        {
+            let vec = v.clone();
+            thread::spawn(move || {
+                f2(vec)
+            })
         }
     }
-
+    */
     fn gen_function_declarations(&self) -> String {
         let mut declarations = String::new();
+        let mut add_declaration = |i: usize| {
+            declarations.push_str(&format!("fn f{}(v: Arc<Vec<u32>>) {{\n", i));
+						declarations.push_str(&format!("if v[5] == {} {{ println!(\"Found\"); }}\n", i));
+            self.adj_list[i].iter().for_each(|node| {
+                declarations.push_str(&formatdoc! {"
+									let t{node} = {{
+										let vec = v.clone();
+										thread::spawn(move || {{
+											f{node}(vec);
+										}})
+									}};
+								", node = node})
+            });
+
+            for node in self.adj_list[i].iter() {
+                declarations.push_str(&format!("t{}.join();\n", node));
+            }
+
+            declarations.push_str("}\n");
+        };
+
         for i in 0..self.num_declarations {
-            let header = format!(
-                "fn f{}(_vec: {}) {{",
-                i,
-                self.get_ref("Vec<i32>", self.mutable)
-            );
-            let mutation = if self.mutable {
-                format!("_vec[{}] = {};", i, i + 1)
-            } else {
-                "".to_string()
-            };
-            let calls = self.adj_list[i]
-                .iter()
-                .map(|node| format!("f{}({});", node, self.get_ref("_vec", self.mutable)))
-                .collect::<Vec<String>>()
-                .join("\n\t");
-
-            declarations.push_str(&formatdoc! {"
-							{header}
-								{mutation}{calls}
-							}}
-
-						", header = header, mutation = mutation, calls = calls});
+            add_declaration(i);
         }
         declarations
     }
@@ -59,18 +59,20 @@ impl RustGenerator {
     pub fn run(&self) {
         let function_declarations = self.gen_function_declarations();
         let rust_code = formatdoc! {"
+						use std::sync::Arc;
+						use std::thread;
 						{function_declarations}
 						fn main() {{
 							let mut vec = Vec::with_capacity({num_functions});
 							for i in 0..{num_functions} {{
 								vec.push(i);
 							}}
+							let v = Arc::new(vec);
 
-							f0({vec_ref});
+							f0(v);
 						}}",
-                        function_declarations = function_declarations,
+            function_declarations = function_declarations,
             num_functions = self.num_declarations,
-            vec_ref = self.get_ref("vec", self.mutable)
         };
 
         fs::write(
@@ -83,19 +85,17 @@ impl RustGenerator {
 
 struct CPPGenerator {
     num_declarations: usize,
-    mutable: bool,
     adj_list: Vec<Vec<u32>>,
 }
 
 impl CPPGenerator {
-    pub fn new(file_path: &str, mutable: bool) -> Self {
+    pub fn new(file_path: &str) -> Self {
         let adj_list: Vec<Vec<u32>> =
             serde_json::from_str(&fs::read_to_string(file_path).expect("Failed to read file"))
                 .expect("Failed to parse json");
         Self {
             num_declarations: adj_list.len(),
             adj_list,
-            mutable,
         }
     }
 
@@ -111,17 +111,14 @@ impl CPPGenerator {
         let mut declarations = String::new();
         for i in 0..self.num_declarations {
             declarations.push_str(&format!("void f{}(vector<int> &vec) {{\n", i));
-            if self.mutable {
-                declarations.push_str(&format!("vec[{}] = {};", i, i + 1));
+						declarations.push_str(&format!("if (vec[5] == {}) {{ printf(\"Found\"); }}\n", i));
+            for node in self.adj_list[i].iter() {
+                declarations.push_str(&format!("thread t{node}(f{node}, ref(vec));\n", node = node));
             }
-            declarations.push_str(
-                &self.adj_list[i]
-                    .iter()
-                    .map(|node| format!("f{}(vec);", node))
-                    .collect::<Vec<String>>()
-                    .join("\n"),
-            );
-            declarations.push_str("\n}\n");
+            for node in self.adj_list[i].iter() {
+                declarations.push_str(&format!("t{}.join();\n", node));
+            }
+            declarations.push_str("}\n");
         }
         declarations
     }
@@ -131,6 +128,7 @@ impl CPPGenerator {
             r#"
 				#include <vector>
 				#include <cstdio>
+				#include <thread>
 				using namespace std;
 
 				{function_headers}
@@ -163,7 +161,7 @@ fn main() {
     let call_tree_files = fs::read_dir("../generated/call-trees").expect("Failed to read dir");
     for call_tree_path in call_tree_files {
         let path = call_tree_path.unwrap().path().display().to_string();
-        RustGenerator::new(&path, false).run();
-        CPPGenerator::new(&path, false).run();
+        RustGenerator::new(&path).run();
+        CPPGenerator::new(&path).run();
     }
 }

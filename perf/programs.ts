@@ -17,7 +17,7 @@ function convertHrtime(hrtime: bigint) {
 
 function compileCpp(filePath: string): bigint {
 	const startTime = process.hrtime.bigint();
-	execa.sync('g++', [filePath]);
+	execa.sync('g++', ['-std=c++17', filePath]);
 	const diff = process.hrtime.bigint() - startTime;
 	return convertHrtime(diff).nanoseconds;
 }
@@ -41,18 +41,3 @@ for (const programPath of programsFiles) {
 		console.log(programPath, compileCpp(programPath));
 	}
 }
-
-/*
-Statistics (in nanoseconds):
-/Users/leonzalion/projects/ee/generated/programs/calls-10.cpp 255570971n
-/Users/leonzalion/projects/ee/generated/programs/calls-10.rs 138481847n
-/Users/leonzalion/projects/ee/generated/programs/calls-100.cpp 266242264n
-/Users/leonzalion/projects/ee/generated/programs/calls-100.rs 154352305n
-/Users/leonzalion/projects/ee/generated/programs/calls-1000.cpp 392609759n
-/Users/leonzalion/projects/ee/generated/programs/calls-1000.rs 392309872n
-/Users/leonzalion/projects/ee/generated/programs/calls-10000.cpp 1713352914n
-/Users/leonzalion/projects/ee/generated/programs/calls-10000.rs 2994808565n
-/Users/leonzalion/projects/ee/generated/programs/calls-100000.cpp 17416428816n
-/Users/leonzalion/projects/ee/generated/programs/calls-100000.rs 35444262774n
-/Users/leonzalion/projects/ee/generated/programs/calls-1000000.cpp 341423129690n
- */
