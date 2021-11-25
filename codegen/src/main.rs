@@ -77,7 +77,10 @@ impl RustGenerator {
 
             declarations.push_str("let mut vec = v.write().unwrap();\n");
             declarations.push_str(&format!("let mut sum = {};\n", i));
-            declarations.push_str("for i in vec.iter() { sum += *i }\n");
+            declarations.push_str(&format!(
+                "for i in 0..{} {{ sum += vec[i]; }}\n",
+                self.num_declarations
+            ));
             declarations.push_str(&format!(
                 "vec[{num_functions} + {}] = sum;\n",
                 i,
@@ -125,9 +128,9 @@ impl RustGenerator {
 						use std::thread;
 						{function_declarations}
 						fn main() {{
-							let mut vec = vec![0, {num_functions} * 2];
+							let mut vec = vec![0u32; {num_functions} * 2];
 							for i in 0..{num_functions} {{
-								vec[i] = i;
+								vec[i] = i as u32;
 							}}
 							let v = Arc::new(RwLock::new(vec));
 
@@ -178,7 +181,8 @@ impl CPPGenerator {
             declarations.push_str(&format!("void f{}(vector<int> &vec) {{\n", i));
             declarations.push_str(&format!(
                 "int sum = {}; for (int i : vec) sum += i; if (sum == {}) printf(\"Found sum\");\n",
-                i, (0..self.num_declarations).sum::<usize>()
+                i,
+                (0..self.num_declarations).sum::<usize>()
             ));
             for node in self.adj_list[i].iter() {
                 declarations.push_str(&format!(
@@ -197,7 +201,10 @@ impl CPPGenerator {
         let mut declarations = String::new();
         for i in 0..self.num_declarations {
             declarations.push_str(&format!("void f{}(vector<int> &vec) {{\n", i));
-            declarations.push_str(&format!("int sum = {}; for (int i : vec) sum += i;", i));
+            declarations.push_str(&format!(
+                "int sum = {}; for (int i = 0; i < {}; i += 1) sum += vec[i];",
+                i, self.num_declarations
+            ));
             declarations.push_str(&format!("vec[{}] = sum;\n", i));
             for node in self.adj_list[i].iter() {
                 declarations.push_str(&format!(
