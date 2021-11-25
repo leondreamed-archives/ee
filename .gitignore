@@ -3,3 +3,5 @@ node_modules
 a.out
 target
 generated
+artifacts
+!artifacts/.gitkeep

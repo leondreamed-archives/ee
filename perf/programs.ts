@@ -2,6 +2,8 @@ import execa from 'execa';
 import fs from 'fs';
 import path from 'path';
 
+import { rootPath } from '../shared/constants/paths';
+
 function convertHrtime(hrtime: bigint) {
 	const nanoseconds = hrtime;
 	const number = Number(nanoseconds);
@@ -15,16 +17,26 @@ function convertHrtime(hrtime: bigint) {
 	};
 }
 
+const artifactDir = path.join(rootPath, 'artifacts');
+
 function compileCpp(filePath: string): bigint {
+	const artifactPath = path.join(
+		artifactDir,
+		`${path.parse(filePath).name}-cpp`
+	);
 	const startTime = process.hrtime.bigint();
-	execa.sync('g++', ['-std=c++17', filePath]);
+	execa.sync('g++', ['-std=c++17', filePath, '-o', artifactPath]);
 	const diff = process.hrtime.bigint() - startTime;
 	return convertHrtime(diff).nanoseconds;
 }
 
 function compileRust(filePath: string): bigint {
+	const artifactPath = path.join(
+		artifactDir,
+		`${path.parse(filePath).name}-rust`
+	);
 	const startTime = process.hrtime.bigint();
-	execa.sync('rustc', [filePath]);
+	execa.sync('rustc', [filePath, '-o', artifactPath]);
 	const diff = process.hrtime.bigint() - startTime;
 	return convertHrtime(diff).nanoseconds;
 }
