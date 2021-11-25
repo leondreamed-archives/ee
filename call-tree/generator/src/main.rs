@@ -12,7 +12,8 @@ struct CallTree {
 }
 
 impl CallTree {
-    pub fn new(num_nodes: u32, max_children: u32) -> Self {
+    pub fn new(num_nodes: u32) -> Self {
+        let max_children = if num_nodes > 100 { 100 } else { 10 };
         println!("Initializing CallTree...");
         let mut call_tree = Self {
             adj: vec![Vec::new() as Vec<u32>; num_nodes as usize],
@@ -43,25 +44,25 @@ impl CallTree {
     }
 
     fn link_nodes(&mut self) {
-        for i in 0..self.num_nodes {
+        for node in 0..self.num_nodes {
             // If node is already linked, continue
-            if i != 0 && !self.unlinked_nodes.contains(&i) {
+            if node != 0 && !self.unlinked_nodes.contains(&node) {
                 continue;
             }
 
-            if i != 0 {
-                self.unlinked_nodes.remove(&i);
-                self.adj[(i - 1) as usize].push(i);
+            if node != 0 {
+                self.unlinked_nodes.remove(&node);
+                self.adj[(node - 1) as usize].push(node);
             }
 
             let num_children = rand::thread_rng().gen_range(0..=self.max_children);
-            for i in 0..num_children {
+            for _ in 0..num_children {
                 if self.unlinked_nodes.len() == 0 {
                     return;
                 }
 
                 let random_unlinked_node = self.get_random_unlinked_node();
-                self.adj[i as usize].push(random_unlinked_node);
+                self.adj[node as usize].push(random_unlinked_node);
             }
         }
     }
@@ -79,10 +80,11 @@ impl CallTree {
 
 fn main() {
     let num_nodes_vec = vec![
-        10, 20, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1_000, 2_000, 3_000, 4_000, 5_000, 6_000, 7_000, 8_000, 9_000, 10_000
-		];
+        10, 20, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1_000, 2_000, 3_000, 4_000, 5_000,
+        6_000, 7_000, 8_000, 9_000, 10_000,
+    ];
     for num_nodes in num_nodes_vec {
         println!("Generating call tree with {} functions...", num_nodes);
-        CallTree::new(num_nodes, 10).write_to_file();
+        CallTree::new(num_nodes).write_to_file();
     }
 }
