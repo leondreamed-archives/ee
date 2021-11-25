@@ -79,9 +79,8 @@ impl CallTree {
 
 fn main() {
     let num_nodes_vec = vec![
-        10, 20, 50, 100, 500, 1_000, 5_000, 10_000, 20_000, 30_000, 40_000, 50_000, 60_000, 70_000,
-        80_000, 90_000, 100_000,
-    ];
+        10, 20, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1_000, 2_000, 3_000, 4_000, 5_000, 6_000, 7_000, 8_000, 9_000, 10_000
+		];
     for num_nodes in num_nodes_vec {
         println!("Generating call tree with {} functions...", num_nodes);
         CallTree::new(num_nodes, 10).write_to_file();

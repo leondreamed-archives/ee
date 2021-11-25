@@ -37,7 +37,7 @@ const programsFiles = fs
 for (const programPath of programsFiles) {
 	if (programPath.endsWith('.rs')) {
 		console.log(programPath, compileRust(programPath));
-	} else {
+	} else if (programPath.endsWith('.cpp')) {
 		console.log(programPath, compileCpp(programPath));
 	}
 }
