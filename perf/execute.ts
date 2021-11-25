@@ -3,7 +3,7 @@ import execa from 'execa';
 import fs from 'fs';
 import path from 'path';
 
-import { rootPath } from '~/shared/constants/paths';
+import { rootPath } from '../shared/constants/paths';
 
 const programsDir = path.join(__dirname, '../generated/programs');
 const programsFiles = fs
@@ -14,7 +14,7 @@ const artifactDir = path.join(rootPath, 'artifacts');
 const benchmark = new Benchmark.Suite();
 for (const programPath of programsFiles) {
 	const artifactPath = programPath.endsWith('.rs')
-		? path.join(artifactDir, `${path.parse(programPath).name}-rs`)
+		? path.join(artifactDir, `${path.parse(programPath).name}-rust`)
 		: path.join(artifactDir, `${path.parse(programPath).name}-cpp`);
 
 	benchmark.add(artifactPath, () => {

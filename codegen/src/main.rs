@@ -60,8 +60,6 @@ impl RustGenerator {
         let mut declarations = String::new();
         let mut add_declaration = |i: usize| {
             declarations.push_str(&format!("fn f{}(v: Arc<RwLock<Vec<u32>>>) {{\n", i));
-						declarations.push_str("let mut vec = v.write().unwrap();\n");
-						declarations.push_str(&format!("vec[{}] = {};\n", i, i + 1));
             self.adj_list[i].iter().for_each(|node| {
                 declarations.push_str(&formatdoc! {"
 									let t{node} = {{
@@ -72,6 +70,8 @@ impl RustGenerator {
 									}};
 								", node = node})
             });
+						declarations.push_str("let mut vec = v.write().unwrap();\n");
+						declarations.push_str(&format!("vec[{}] = {};\n", i, i + 1));
 
             for node in self.adj_list[i].iter() {
                 declarations.push_str(&format!("t{}.join().unwrap();\n", node));
@@ -271,7 +271,6 @@ fn main() {
 				let cpp_generator = CPPGenerator::new(&path);
 				cpp_generator.run();
 				cpp_generator.run_mutable();
-        CPPGenerator::new(&path).run();
     }
 }
 
