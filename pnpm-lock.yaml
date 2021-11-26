@@ -9,6 +9,7 @@ importers:
       '@types/benchmark': ^2.1.1
       '@types/d3': ^7.1.0
       '@types/functional-red-black-tree': ^1.0.1
+      '@types/lodash.chunk': ^4.2.6
       '@types/node': ^16.9.3
       '@typescript-eslint/eslint-plugin': ^4.31.2
       '@typescript-eslint/parser': ^4.31.1
@@ -27,6 +28,7 @@ importers:
       functional-red-black-tree: ^1.0.1
       husky: ^7.0.2
       lint-staged: ^11.1.2
+      lodash.chunk: ^4.2.0
       prettier: ^2.4.1
       splaytree: ^3.1.0
       ts-node: ^10.2.1
@@ -38,6 +40,7 @@ importers:
       convert-hrtime: 3.0.0
       d3: 7.1.1
       functional-red-black-tree: 1.0.1
+      lodash.chunk: 4.2.0
       splaytree: 3.1.0
     devDependencies:
       '@commitlint/cli': 13.2.1
@@ -45,6 +48,7 @@ importers:
       '@types/benchmark': 2.1.1
       '@types/d3': 7.1.0
       '@types/functional-red-black-tree': 1.0.1
+      '@types/lodash.chunk': 4.2.6
       '@types/node': 16.11.7
       '@typescript-eslint/eslint-plugin': 4.33.0_cc617358c89d3f38c52462f6d809db4c
       '@typescript-eslint/parser': 4.33.0_eslint@7.32.0+typescript@4.4.4
@@ -753,6 +757,16 @@ packages:
 
   /@types/json5/0.0.29:
     resolution: {integrity: sha1-7ihweulOEdK4J7y+UnC86n8+ce4=}
+    dev: true
+
+  /@types/lodash.chunk/4.2.6:
+    resolution: {integrity: sha512-SPlusB7jxXyGcTXYcUdWr7WmhArO/rmTq54VN88iKMxGUhyg79I4Q8n4riGn3kjaTjOJrVlHhxgX/d7woak5BQ==}
+    dependencies:
+      '@types/lodash': 4.14.177
+    dev: true
+
+  /@types/lodash/4.14.177:
+    resolution: {integrity: sha512-0fDwydE2clKe9MNfvXHBHF9WEahRuj+msTuQqOmAApNORFvhMYZKNGGJdCzuhheVjMps/ti0Ak/iJPACMaevvw==}
     dev: true
 
   /@types/minimist/1.2.2:
@@ -2740,6 +2754,10 @@ packages:
     dependencies:
       p-locate: 5.0.0
     dev: true
+
+  /lodash.chunk/4.2.0:
+    resolution: {integrity: sha1-ZuXOH3btJ7QwPYxlEujRIW6BBrw=}
+    dev: false
 
   /lodash.get/4.4.2:
     resolution: {integrity: sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=}
