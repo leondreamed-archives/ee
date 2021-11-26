@@ -202,7 +202,7 @@ impl CPPGenerator {
         for i in 0..self.num_declarations {
             declarations.push_str(&format!("void f{}(vector<int> &vec) {{\n", i));
             declarations.push_str(&format!(
-                "int sum = {}; for (int i = 0; i < {}; i += 1) sum += vec[i];",
+                "int sum = {}; for (int i = 0; i < {}; i += 1) sum += vec[i];\n",
                 i, self.num_declarations
             ));
             declarations.push_str(&format!("vec[{}] = sum;\n", i));
