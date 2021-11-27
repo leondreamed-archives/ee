@@ -56,6 +56,25 @@ impl RustGenerator {
         declarations
     }
 
+    fn gen_paramless_function_declarations(&self) -> String {
+        let mut declarations = String::new();
+        let mut add_declaration = |i: usize| {
+            declarations.push_str(&format!("fn f{}() {{\n", i));
+            self.adj_list[i].iter().for_each(|node| {
+                declarations.push_str(&formatdoc! {"
+									f{node}();
+								", node = node})
+            });
+
+            declarations.push_str("}\n");
+        };
+
+        for i in 0..self.num_declarations {
+            add_declaration(i);
+        }
+        declarations
+    }
+
     fn gen_mutable_function_declarations(&self) -> String {
         let mut declarations = String::new();
         let mut add_declaration = |i: usize| {
@@ -149,6 +168,23 @@ impl RustGenerator {
         )
         .expect("Failed to write calls-mut.rs");
     }
+
+    pub fn run_paramless(&self) {
+        let function_declarations = self.gen_paramless_function_declarations();
+        let rust_code = formatdoc! {"
+						{function_declarations}
+						fn main() {{
+							f0();
+						}}",
+            function_declarations = function_declarations,
+        };
+
+        fs::write(
+            format!("../generated/programs/calls-paramless-{}.rs", self.num_declarations),
+            rust_code,
+        )
+        .expect("Failed to write calls.rs");
+    }
 }
 
 struct CPPGenerator {
@@ -175,6 +211,14 @@ impl CPPGenerator {
         headers
     }
 
+    fn gen_paramless_function_headers(&self) -> String {
+        let mut headers = String::new();
+        for i in 0..self.num_declarations {
+            headers.push_str(&format!("void f{}();\n", i));
+        }
+        headers
+    }
+
     fn gen_function_declarations(&self) -> String {
         let mut declarations = String::new();
         for i in 0..self.num_declarations {
@@ -197,6 +241,20 @@ impl CPPGenerator {
         }
         declarations
     }
+
+
+    fn gen_paramless_function_declarations(&self) -> String {
+        let mut declarations = String::new();
+        for i in 0..self.num_declarations {
+            declarations.push_str(&format!("void f{}() {{\n", i));
+            for node in self.adj_list[i].iter() {
+                declarations.push_str(&format!("f{node}();\n", node = node));
+            }
+            declarations.push_str("}\n");
+        }
+        declarations
+    }
+
     fn gen_mutable_function_declarations(&self) -> String {
         let mut declarations = String::new();
         for i in 0..self.num_declarations {
@@ -289,6 +347,32 @@ impl CPPGenerator {
         )
         .expect("Failed to write calls-mut.cpp");
     }
+
+    pub fn run_paramless(&self) {
+        let cpp_code = formatdoc! {
+            r#"
+				#include <vector>
+				#include <cstdio>
+				#include <thread>
+				using namespace std;
+
+				{function_headers}
+				{function_declarations}
+
+				int main() {{
+					f0();
+				}}
+			"#,
+            function_headers = self.gen_paramless_function_headers(),
+            function_declarations = self.gen_paramless_function_declarations()
+        };
+
+        fs::write(
+            format!("../generated/programs/calls-paramless-{}.cpp", self.num_declarations),
+            cpp_code,
+        )
+        .expect("Failed to write calls.cpp");
+    }
 }
 
 fn main() {
@@ -298,8 +382,14 @@ fn main() {
         let rust_generator = RustGenerator::new(&path);
         rust_generator.run();
         rust_generator.run_mutable();
+				if path.contains("100000") {
+					rust_generator.run_paramless();
+				}
         let cpp_generator = CPPGenerator::new(&path);
         cpp_generator.run();
         cpp_generator.run_mutable();
+				if path.contains("100000") {
+					cpp_generator.run_paramless();
+				}
     }
 }
