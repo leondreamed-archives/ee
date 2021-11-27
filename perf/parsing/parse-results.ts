@@ -1,9 +1,10 @@
 import fs from 'fs';
 import chunk from 'lodash.chunk';
 import path from 'path';
+import { rootPath } from '~/shared/constants/paths';
 
 const compileResults = fs
-	.readFileSync('compile-results.txt')
+	.readFileSync(path.join(rootPath, 'results.json'))
 	.toString()
 	.split('\n')
 	.map((line) => {
