@@ -7,8 +7,7 @@ export const artifactDir = path.join(rootPath, 'artifacts');
 export const programsDir = path.join(rootPath, 'generated/programs');
 export const programsFiles = fs
 	.readdirSync(programsDir)
-	.map((filename) => path.join(programsDir, filename))
-	.filter((p) => ['-20.', '-50.', '-100.', '-200.', '-500.'].some((n) => p.includes(n)));
+	.map((filename) => path.join(programsDir, filename));
 
 export function getFilename(pathString: string) {
 	return path.basename(pathString);

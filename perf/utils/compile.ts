@@ -18,7 +18,7 @@ function compileCpp({
 	);
 	const startTime = process.hrtime.bigint();
 	if (optimized) {
-		execa.sync('g++', ['-std=c++17', '-O3', filePath, '-o', artifactPath]);
+		execa.sync('g++', ['-std=c++17', filePath, '-o', artifactPath]);
 	} else {
 		execa.sync('g++', ['-std=c++17', filePath, '-o', artifactPath]);
 	}
@@ -39,7 +39,7 @@ function compileRust({
 	);
 	const startTime = process.hrtime.bigint();
 	if (optimized) {
-		execa.sync('rustc', [filePath, '-C', 'opt-level=3', '-o', artifactPath]);
+		execa.sync('rustc', [filePath, '-o', artifactPath]);
 	} else {
 		execa.sync('rustc', [filePath, '-o', artifactPath]);
 	}

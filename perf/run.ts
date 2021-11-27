@@ -41,6 +41,15 @@ async function main() {
 	compileAndTimePrograms(overallResults);
 	cleanArtifactsFolder();
 
+	// write results to file before compiling (which takes FOREVER)
+	fs.writeFileSync(
+		'results.json',
+		JSON.stringify(
+			overallResults,
+			(key, value) => (typeof value === 'bigint' ? value.toString() : value) // return everything else unchanged
+		)
+	);
+
 	compileOptimizedPrograms();
 
 	runAndTimePrograms(overallResults);
