@@ -39,9 +39,9 @@ function compileRust({
 	);
 	const startTime = process.hrtime.bigint();
 	if (optimized) {
-		execa.sync('rustc', [filePath, '-o', artifactPath]);
-	} else {
 		execa.sync('rustc', [filePath, '-C', 'opt-level=3', '-o', artifactPath]);
+	} else {
+		execa.sync('rustc', [filePath, '-o', artifactPath]);
 	}
 	const diff = process.hrtime.bigint() - startTime;
 	return convertHrtime(diff).nanoseconds;
@@ -50,6 +50,7 @@ function compileRust({
 export function compileAndTimePrograms(overallResults: OverallResults) {
 	for (const programPath of programsFiles) {
 		const filename = getFilename(programPath);
+		console.log(`Compiling and timing ${filename}...`);
 		if (programPath.endsWith('.rs')) {
 			const time = compileRust({ filePath: programPath, optimized: false });
 			if (filename.includes('mut')) {
@@ -83,6 +84,8 @@ export function compileAndTimePrograms(overallResults: OverallResults) {
 
 export function compileOptimizedPrograms() {
 	for (const programPath of programsFiles) {
+		const filename = getFilename(programPath);
+		console.log(`Compiling optimized ${filename}...`);
 		if (programPath.endsWith('.rs')) {
 			compileRust({ filePath: programPath, optimized: true });
 		} else if (programPath.endsWith('.cpp')) {

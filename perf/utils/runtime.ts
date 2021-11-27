@@ -7,6 +7,7 @@ import { artifactDir, getFilename, programsFiles } from './paths';
 export function runAndTimePrograms(overallResults: OverallResults) {
 	for (const programPath of programsFiles) {
 		const filename = getFilename(programPath);
+		console.log(`Running program ${filename}`);
 		const artifactPath = programPath.endsWith('.rs')
 			? path.join(artifactDir, `${path.parse(programPath).name}-rust`)
 			: path.join(artifactDir, `${path.parse(programPath).name}-cpp`);

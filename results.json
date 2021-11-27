@@ -1,0 +1,55 @@
+{
+	"compilationTime": {
+		"immutableState": {
+			"cpp": {
+				"calls-200.cpp": ["608654065"],
+				"calls-50.cpp": ["427672813"],
+				"calls-500.cpp": ["720078097"]
+			},
+			"rust": {
+				"calls-200.rs": ["7720577851"],
+				"calls-50.rs": ["1950185321"],
+				"calls-500.rs": ["20897582050"]
+			}
+		},
+		"mutableState": {
+			"cpp": {
+				"calls-mut-200.cpp": ["482319622"],
+				"calls-mut-50.cpp": ["409017065"],
+				"calls-mut-500.cpp": ["611622227"]
+			},
+			"rust": {
+				"calls-mut-200.rs": ["7591691829"],
+				"calls-mut-50.rs": ["1966041145"],
+				"calls-mut-500.rs": ["21514232789"]
+			}
+		},
+		"paramless": { "cpp": {}, "rust": {} }
+	},
+	"runTime": {
+		"immutableState": {
+			"cpp": {
+				"calls-200.cpp": ["7380663"],
+				"calls-50.cpp": ["5363379"],
+				"calls-500.cpp": ["11131093"]
+			},
+			"rust": {
+				"calls-200.rs": ["9083463"],
+				"calls-50.rs": ["6247731"],
+				"calls-500.rs": ["15279887"]
+			}
+		},
+		"mutableState": {
+			"cpp": {
+				"calls-mut-200.cpp": ["7833512"],
+				"calls-mut-50.cpp": ["5392975"],
+				"calls-mut-500.cpp": ["10850135"]
+			},
+			"rust": {
+				"calls-mut-200.rs": ["8783100"],
+				"calls-mut-50.rs": ["5672403"],
+				"calls-mut-500.rs": ["21054254"]
+			}
+		}
+	}
+}

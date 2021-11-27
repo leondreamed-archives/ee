@@ -5,7 +5,7 @@ import {
 	compileAndTimePrograms,
 	compileOptimizedPrograms,
 } from './utils/compile';
-import { cleanProgramsFolder } from './utils/remove';
+import { cleanArtifactsFolder } from './utils/remove';
 import { runAndTimePrograms } from './utils/runtime';
 
 async function main() {
@@ -36,21 +36,23 @@ async function main() {
 		},
 	};
 
-	// Run and track compilation time of programs 3 times
-	for (let i = 0; i < 3; i += 1) {
-		compileAndTimePrograms(overallResults);
-		cleanProgramsFolder();
-	}
+	cleanArtifactsFolder();
+
+	compileAndTimePrograms(overallResults);
+	cleanArtifactsFolder();
 
 	compileOptimizedPrograms();
 
-	// Run and track runtime of programs 3 times
-	for (let i = 0; i < 3; i += 1) {
-		runAndTimePrograms(overallResults);
-	}
+	runAndTimePrograms(overallResults);
 
 	// write results to file
-	fs.writeFileSync('results.json', JSON.stringify(overallResults));
+	fs.writeFileSync(
+		'results.json',
+		JSON.stringify(
+			overallResults,
+			(key, value) => (typeof value === 'bigint' ? value.toString() : value) // return everything else unchanged
+		)
+	);
 }
 
 void main();

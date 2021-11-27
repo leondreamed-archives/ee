@@ -1,6 +1,11 @@
 import fs from 'fs';
 
-import { programsDir } from './paths';
+import { artifactDir, programsDir } from './paths';
+
+export function cleanArtifactsFolder() {
+	fs.rmSync(artifactDir, { recursive: true, force: true });
+	fs.mkdirSync(artifactDir);
+}
 
 export function cleanProgramsFolder() {
 	fs.rmSync(programsDir, { recursive: true, force: true });
