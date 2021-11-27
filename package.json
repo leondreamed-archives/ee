@@ -6,7 +6,8 @@
 	"scripts": {
 		"lint": "eslint --fix src",
 		"prettier": "prettier --write src",
-		"gen:call-trees": "ts-node ./call-tree/generator/gen-call-trees.ts"
+		"gen:call-trees": "ts-node ./call-tree/generator/gen-call-trees.ts",
+		"run:perf": "ts-node ./perf/run.ts"
 	},
 	"keywords": [],
 	"author": "",

@@ -382,13 +382,13 @@ fn main() {
         let rust_generator = RustGenerator::new(&path);
         rust_generator.run();
         rust_generator.run_mutable();
-				if path.contains("100000") {
+				if path.contains("20000") {
 					rust_generator.run_paramless();
 				}
         let cpp_generator = CPPGenerator::new(&path);
         cpp_generator.run();
         cpp_generator.run_mutable();
-				if path.contains("100000") {
+				if path.contains("20000") {
 					cpp_generator.run_paramless();
 				}
     }
