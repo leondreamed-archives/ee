@@ -4,16 +4,30 @@ import * as d3 from 'd3';
 
 import { NUM_FUNCTIONS } from '~/shared/constants/gen';
 import type { TreeNode } from '~/types';
-import callTree from '~generated/call-trees/100';
+import adjList from '~generated/call-trees/50';
 
-const treeMargin = 15;
-const nodeRadius = 10;
+function convertAdjListNodeToTreeNode(node: number): TreeNode {
+	const treeNodeChildren = adjList[node].map((childNode) =>
+		convertAdjListNodeToTreeNode(childNode)
+	);
+	const treeNode: TreeNode = {
+		node,
+		children: treeNodeChildren,
+	};
+	return treeNode;
+}
+
+const callTree = convertAdjListNodeToTreeNode(0);
+console.log(callTree);
+
+const treeMargin = 30;
+const nodeRadius = 20;
 
 const treeHeight = NUM_FUNCTIONS * 10;
 const treeWidth = NUM_FUNCTIONS * 15;
 
 const tree = d3.tree<TreeNode>().size([treeWidth, treeHeight]);
-const treeData = tree(d3.hierarchy(callTree.tree, (node) => node.children));
+const treeData = tree(d3.hierarchy(callTree, (node) => node.children));
 
 const nodes = treeData.descendants();
 const links = treeData.links();
@@ -57,8 +71,8 @@ for (const node of nodes) {
 	// Creating the text for the node
 	const nodeText = createSvgElement('text');
 	nodeText.setAttribute('text-anchor', 'middle');
-	nodeText.setAttribute('font-size', '10px');
-	nodeText.setAttribute('y', '3');
+	nodeText.setAttribute('font-size', '20px');
+	nodeText.setAttribute('y', '6');
 	nodeText.innerHTML = `f${node.data.node}`;
 	nodeG.append(nodeText);
 
