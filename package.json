@@ -44,6 +44,7 @@
 		"d3": "^7.1.1",
 		"functional-red-black-tree": "^1.0.1",
 		"lodash.chunk": "^4.2.0",
+		"round-to": "^5.0.0",
 		"splaytree": "^3.1.0"
 	}
 }

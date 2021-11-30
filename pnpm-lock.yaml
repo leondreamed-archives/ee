@@ -30,6 +30,7 @@ importers:
       lint-staged: ^11.1.2
       lodash.chunk: ^4.2.0
       prettier: ^2.4.1
+      round-to: ^5.0.0
       splaytree: ^3.1.0
       ts-node: ^10.2.1
       tsconfig-paths: ^3.11.0
@@ -41,6 +42,7 @@ importers:
       d3: 7.1.1
       functional-red-black-tree: 1.0.1
       lodash.chunk: 4.2.0
+      round-to: 5.0.0
       splaytree: 3.1.0
     devDependencies:
       '@commitlint/cli': 13.2.1
@@ -3291,6 +3293,11 @@ packages:
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
+
+  /round-to/5.0.0:
+    resolution: {integrity: sha512-i4+Ntwmo5kY7UWWFSDEVN3RjT2PX1FqkZ9iCcAO3sKML3Ady9NgsjM/HLdYKUAnrxK4IlSvXzpBMDvMHZQALRQ==}
+    engines: {node: '>=10'}
+    dev: false
 
   /run-parallel/1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}

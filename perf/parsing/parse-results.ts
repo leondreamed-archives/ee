@@ -85,7 +85,7 @@ function generateRow(numFunctions: number) {
 		getRunTime(`calls-mut-${numFunctions}.rs`) / 1_000_000,
 	] as const;
 
-	resultRows.push(row);
+	resultRows.push(row.map((n) => n.toFixed(2)) as any);
 }
 
 for (const numFunctions of possibleNumFunctions) {
